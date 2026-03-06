@@ -1,6 +1,6 @@
-import React from 'react';
+import { memo } from 'react';
 
-export default function TodoField(props) {
+function TodoField(props) {
 	const { id, title = 'Field title', type = 'text', value, setValue } = props;
 
 	return (
@@ -20,3 +20,5 @@ export default function TodoField(props) {
 		</div>
 	);
 }
+
+export default memo(TodoField);

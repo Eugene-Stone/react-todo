@@ -17,7 +17,9 @@ export default function TodoInfo() {
 				<button
 					className="todo__delete-all-button"
 					type="button"
-					onClick={removeAllTasksHandler}>
+					onClick={() => {
+						confirm('Are you sure?') && removeAllTasksHandler();
+					}}>
 					Delete all
 				</button>
 			)}

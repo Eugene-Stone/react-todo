@@ -1,9 +1,8 @@
-import { useContext } from 'react';
+import { useContext, memo } from 'react';
 import { TodosContext } from '../../context/TodosContext/TodosContext';
 
-export default function TodoItem({ id, title, isComplate }) {
+function TodoItem({ id, title, isComplate }) {
 	const { checkedTaskHandler, removeTaskHandler } = useContext(TodosContext);
-	// console.log(checkedTaskHandler);
 
 	return (
 		<li className="todo__item todo-item">
@@ -42,3 +41,5 @@ export default function TodoItem({ id, title, isComplate }) {
 		</li>
 	);
 }
+
+export default memo(TodoItem);
