@@ -1,11 +1,12 @@
 import React from 'react';
 
-export default function TodoItem() {
+export default function TodoItem({ id, title, isComplate }) {
 	return (
 		<li className="todo__item todo-item">
-			<input className="todo-item__checkbox" id="task-1" type="checkbox" checked />
-			<label className="todo-item__label" htmlFor="task-1">
-				Task 1
+			<input className="todo-item__checkbox" id={id} type="checkbox" checked={isComplate} />
+
+			<label className="todo-item__label" htmlFor={id}>
+				{title}
 			</label>
 			<button className="todo-item__delete-button" aria-label="Delete" title="Delete">
 				<svg
