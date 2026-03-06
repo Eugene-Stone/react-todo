@@ -1,0 +1,20 @@
+import React from 'react';
+
+export default function TodoField(props) {
+	const { id, title = 'Field title', type = 'text' } = props;
+
+	return (
+		<div className="todo__field field">
+			<label className="field__label" htmlFor={id}>
+				{title}
+			</label>
+			<input
+				className="field__input"
+				id={id}
+				placeholder=" "
+				autoComplete="off"
+				type={type}
+			/>
+		</div>
+	);
+}
