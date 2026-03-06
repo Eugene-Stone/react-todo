@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function TodoField(props) {
-	const { id, title = 'Field title', type = 'text' } = props;
+	const { id, title = 'Field title', type = 'text', value, setValue } = props;
 
 	return (
 		<div className="todo__field field">
@@ -14,6 +14,8 @@ export default function TodoField(props) {
 				placeholder=" "
 				autoComplete="off"
 				type={type}
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
 			/>
 		</div>
 	);

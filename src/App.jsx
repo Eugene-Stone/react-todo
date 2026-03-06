@@ -1,4 +1,4 @@
-import TodoInfo from './components/TodoInfo/TodoInfo';
+// import TodoInfo from './components/TodoInfo/TodoInfo';
 import TodoList from './components/TodoList/TodoList';
 import TodoAddForm from './components/TodoAddForm/TodoAddForm';
 import TodoSearchForm from './components/TodoSearchForm/TodoSearchForm';
@@ -15,8 +15,6 @@ function App() {
 
 			<TodoAddForm />
 			<TodoSearchForm />
-
-			<TodoInfo />
 			<TodoList />
 		</div>
 	);

@@ -1,14 +1,29 @@
-import React from 'react';
+import { useContext } from 'react';
+import { TodosContext } from '../../context/TodosContext/TodosContext';
 
 export default function TodoItem({ id, title, isComplate }) {
+	const { checkedTaskHandler, removeTaskHandler } = useContext(TodosContext);
+	// console.log(checkedTaskHandler);
+
 	return (
 		<li className="todo__item todo-item">
-			<input className="todo-item__checkbox" id={id} type="checkbox" checked={isComplate} />
+			<input
+				className="todo-item__checkbox"
+				id={id}
+				type="checkbox"
+				checked={isComplate}
+				onChange={() => checkedTaskHandler(id)}
+			/>
 
 			<label className="todo-item__label" htmlFor={id}>
 				{title}
 			</label>
-			<button className="todo-item__delete-button" aria-label="Delete" title="Delete">
+
+			<button
+				className="todo-item__delete-button"
+				aria-label="Delete"
+				title="Delete"
+				onClick={() => removeTaskHandler(id)}>
 				<svg
 					width="20"
 					height="20"

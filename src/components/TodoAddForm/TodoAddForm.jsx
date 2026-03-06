@@ -1,10 +1,31 @@
 import Button from '../Button/Button';
 import TodoField from '../TodoField/TodoField';
 
-export default function TodoAddForm({ children }) {
+import { useContext, useState } from 'react';
+import { TodosContext } from '../../context/TodosContext/TodosContext';
+
+export default function TodoAddForm() {
+	const [value, setValue] = useState('');
+	const { addTaskHandler } = useContext(TodosContext);
+
+	// console.log(value);
+
 	return (
-		<form className="todo__form">
-			<TodoField id="new-task" title="New task" />
+		<form
+			className="todo__form"
+			onSubmit={(e) => {
+				e.preventDefault();
+				value !== '' && addTaskHandler(value);
+				setValue('');
+			}}>
+			<TodoField
+				id="new-task"
+				title="New task"
+				value={value}
+				setValue={setValue}
+				addTaskHandler={addTaskHandler}
+			/>
+
 			<Button type="submit">Add</Button>
 		</form>
 	);

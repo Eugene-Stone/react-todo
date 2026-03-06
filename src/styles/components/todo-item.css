@@ -65,7 +65,7 @@
 
 .todo-item__label {
   width: 100%;
-  pointer-events: none;
+  user-select: none;
 }
 
 .todo-item__delete-button {
