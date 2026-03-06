@@ -15,7 +15,7 @@ export default function TodoAddForm() {
 			className="todo__form"
 			onSubmit={(e) => {
 				e.preventDefault();
-				value !== '' && addTaskHandler(value);
+				value !== '' ? addTaskHandler(value) : alert('Заполните поле');
 				setValue('');
 			}}>
 			<TodoField

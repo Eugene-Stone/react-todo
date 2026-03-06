@@ -4,9 +4,11 @@ import TodoItem from '../TodoItem/TodoItem';
 import TodoInfo from '../TodoInfo/TodoInfo';
 
 export default function TodoList() {
-	const { todos } = useContext(TodosContext);
+	const { todos, todosFiltered } = useContext(TodosContext);
 
-	const todosList = todos.map((todoItem) => {
+	console.log(todosFiltered);
+
+	const todosList = todosFiltered.map((todoItem) => {
 		return (
 			<TodoItem
 				key={todoItem.id}

@@ -5,6 +5,11 @@ const TodosContext = createContext();
 
 export default function TodosContextProvider({ children }) {
 	const [todos, setTodos] = useState(todosInitial);
+	const [searchValue, setSearchValue] = useState('');
+
+	const todosFiltered = todos.filter((todoItem) =>
+		todoItem.title.toLowerCase().includes(searchValue.toLowerCase()),
+	);
 
 	function addTaskHandler(value) {
 		const newTaskId = Date.now();
@@ -41,6 +46,9 @@ export default function TodosContextProvider({ children }) {
 		<TodosContext.Provider
 			value={{
 				todos,
+				todosFiltered,
+				searchValue,
+				setSearchValue,
 				addTaskHandler,
 				checkedTaskHandler,
 				removeTaskHandler,
