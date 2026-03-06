@@ -1,0 +1,148 @@
+https://vite.dev/guide/static-deploy
+
+npm create vite@latest .
+npm i sass
+npm i react-router
+npm i react-router-dom
+
+
+// Для запуска командой npm start
+"scripts": {
+	"start": "vite",
+},
+
+
+--open - Автоматическое открытие браузера в файл package.json
+"scripts": {
+	"start": "vite --open",
+	"dev": "vite --open",
+},
+
+
+В файле eslint.config.js исправить, чтобы убрать лишние предупреждения
+rules: {
+	// 'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+	'no-unused-vars': 'off',
+},
+
+В файле vite.config.js
+export default defineConfig({
+	plugins: [react()],
+
+	// Настройка ALIAS
+	resolve: {
+		alias: {
+			"@": path.resolve(__dirname, "./src"),
+			"@components": path.resolve(__dirname, "./src/components"),
+		},
+	},
+
+	// base: "/react-router", // Для корректной работы GitHub Pages, нужно еще добавить строчку  "postbuild": "cp dist/index.html dist/404.html", в package.json в строке "scripts"
+
+	// server: {
+	//   open: true, // Открытие в браузере при запуске
+	// }
+});
+
+
+1️⃣ Фейковый backend, который работает как настоящий REST API.
+npm install -D json-server
+
+2️⃣ Создать файл db.json в корне проекта
+{
+  "favorites": [
+    {
+      "id": 1,
+      "userId": 1,
+      "title": "Inception",
+      "year": 2010,
+      "poster": "https://image.tmdb.org/t/p/w200/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg"
+    }
+  ]
+}
+
+3️⃣ Запуск сервера
+npx json-server --watch db.json --port 3001
+
+Пакет concurrently позволит запускать проект одновременно с сервером
+npm install -D concurrently
+
+Добавить
+"scripts": {
+  "dev": "vite",
+  "server": "json-server --watch db.json --port 3001",
+  "start": "concurrently \"npm run dev\" \"npm run server\""
+}
+
+
+GET    http://localhost:3001/favorites?userId=1
+POST   http://localhost:3001/favorites
+DELETE http://localhost:3001/favorites/1
+
+
+// Получение избранного
+useEffect(() => {
+	async function fetchFavorites() {
+	try {
+		setLoading(true);
+		const response = await fetch(`/api/users/${userId}/favorites`);
+		if (!response.ok) throw new Error("Ошибка загрузки");
+		const data = await response.json();
+		setFavorites(data);
+	} catch (err) {
+		setError(err.message);
+	} finally {
+		setLoading(false);
+	}
+	}
+
+	fetchFavorites();
+}, [userId]);
+
+
+// Добавление в избранное
+async function addToFavorites(movie) {
+	try {
+	const response = await fetch(`/api/users/${userId}/favorites`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(movie),
+	});
+
+	if (!response.ok) throw new Error("Ошибка добавления");
+
+	const newMovie = await response.json();
+	setFavorites((prev) => [...prev, newMovie]);
+	} catch (err) {
+	console.error(err);
+	}
+}
+
+// Удаление
+async function removeFromFavorites(movieId) {
+	try {
+	const response = await fetch(
+		`/api/users/${userId}/favorites/${movieId}`,
+		{ method: "DELETE" }
+	);
+
+	if (!response.ok) throw new Error("Ошибка удаления");
+
+	setFavorites((prev) =>
+		prev.filter((movie) => movie.id !== movieId)
+	);
+	} catch (err) {
+	console.error(err);
+	}
+}
+
+
+Получение JSON из public
+useEffect(() => {
+	fetch('/data/users.json')
+		.then((res) => res.json())
+		.then((data) => setImages(data))
+		.catch((err) => console.error('Ошибка загрузки:', err)); // Всегда добавляй catch!
+}, []);
