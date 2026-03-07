@@ -6,6 +6,14 @@
     scale: 0.7;
     translate: -1.75em -2.6em;
   }
+
+  .error {
+	position: absolute;
+	left: 0;
+	top: 100%;
+	color: red;
+	font-size: 11px;
+  }
 }
 
 .field__label {
@@ -45,5 +53,9 @@
       background-size: var(--fieldSeachInputIconSize);
       background-repeat: no-repeat;
     }
+  }
+
+  &.is-invalid {
+	border-color: red;
   }
 }

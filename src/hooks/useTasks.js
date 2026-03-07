@@ -1,28 +1,63 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { todos as todosInitial } from "../constants/constants.js";
 
 export default function useTasks() {
-	const [todos, setTodos] = useState(todosInitial);
+	const [todos, setTodos] = useState([]);
 	const [searchValue, setSearchValue] = useState("");
 
-	const todosFiltered = useMemo(
-		() =>
-			todos.filter((todoItem) =>
-				todoItem.title
-					.toLowerCase()
-					.includes(searchValue.toLowerCase()),
-			),
-		[todos, searchValue],
-	);
+	const [loading, setLoading] = useState(true);
+	const [errorData, setErrorData] = useState(null);
 
-	const addTaskHandler = useCallback((value) => {
-		const newTaskId = Date.now();
-		// setTodos([...todos, { id: newTaskId, title: value, isComplate: false }]);
-		setTodos((prevTasks) => [
-			...prevTasks,
-			{ id: newTaskId, title: value, isComplate: false },
-		]);
-	}, []);
+	const addRef = useRef(null)
+
+	useEffect(()=> {
+		async function fetchData() {
+			try {
+				const response = await fetch("http://localhost:3001/todos");
+
+				if (!response.ok) throw new Error('Error data server');
+					const data = await response.json();
+
+					setTodos(data);
+
+			} catch (error) {
+				setErrorData(error)
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		fetchData();
+	},[])
+
+
+
+	async function addTaskHandler(value) {
+		const newTaskId = self.crypto?.randomUUID() ?? Date.now();
+
+		try {
+			const response = await fetch("http://localhost:3001/todos", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					id: newTaskId,
+					title: value,
+					isComplate: false,
+				}),
+			});
+
+			if (!response.ok) throw new Error('Error add task');
+
+			const newTask = await response.json()
+			console.log(newTask);
+			setTodos((prev) => [...prev, newTask]);
+
+		} catch (error) {
+			setErrorData(error.message);
+		}
+	}
 
 	const checkedTaskHandler = useCallback(
 		(id) => {
@@ -51,6 +86,21 @@ export default function useTasks() {
 		setTodos([]);
 	}, []);
 
+
+	useEffect(()=> {
+		addRef.current.focus()
+	},[])
+
+	const todosFiltered = useMemo(
+		() =>
+			todos.filter((todoItem) =>
+				todoItem.title
+					.toLowerCase()
+					.includes(searchValue.toLowerCase()),
+			),
+		[todos, searchValue],
+	);
+
 	return {
 		todos,
 		todosFiltered,
@@ -60,5 +110,6 @@ export default function useTasks() {
 		checkedTaskHandler,
 		removeTaskHandler,
 		removeAllTasksHandler,
+		addRef,
 	};
 }
