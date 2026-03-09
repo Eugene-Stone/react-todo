@@ -1,7 +1,7 @@
 import { useContext, memo } from 'react';
 import { TodosContext } from '../../context/TodosContext/TodosContext';
 
-function TodoItem({ id, title, isComplate }) {
+function TodoItem({ task, id, title, isComplate }) {
 	const { checkedTaskHandler, removeTaskHandler } = useContext(TodosContext);
 
 	return (
@@ -11,7 +11,7 @@ function TodoItem({ id, title, isComplate }) {
 				id={id}
 				type="checkbox"
 				checked={isComplate}
-				onChange={() => checkedTaskHandler(id)}
+				onChange={() => checkedTaskHandler(task)}
 			/>
 
 			<label className="todo-item__label" htmlFor={id}>
@@ -22,7 +22,7 @@ function TodoItem({ id, title, isComplate }) {
 				className="todo-item__delete-button"
 				aria-label="Delete"
 				title="Delete"
-				onClick={() => removeTaskHandler(id)}>
+				onClick={() => removeTaskHandler(task)}>
 				<svg
 					width="20"
 					height="20"

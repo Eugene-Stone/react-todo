@@ -22,6 +22,7 @@ export default function TodoList() {
 			return (
 				<TodoItem
 					key={todoItem.id}
+					task={todoItem}
 					id={todoItem.id}
 					title={todoItem.title}
 					isComplate={todoItem.isComplate}

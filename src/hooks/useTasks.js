@@ -8,39 +8,41 @@ export default function useTasks() {
 	const [loading, setLoading] = useState(true);
 	const [errorData, setErrorData] = useState(null);
 
-	const addRef = useRef(null)
+	const addRef = useRef(null);
 
-	useEffect(()=> {
+	useEffect(() => {
 		async function fetchData() {
 			try {
-				const response = await fetch("http://localhost:3001/todos");
+				const response = await fetch("http://localhost:3001/todos", {
+					headers: {
+						"Content-Type": "application/json",
+					},
+					method: "GET",
+				});
 
-				if (!response.ok) throw new Error('Error data server');
-					const data = await response.json();
+				if (!response.ok) throw new Error("Error data server");
+				const data = await response.json();
 
-					setTodos(data);
-
+				setTodos(data);
 			} catch (error) {
-				setErrorData(error)
+				setErrorData(error);
 			} finally {
-				setLoading(false)
+				setLoading(false);
 			}
 		}
 
 		fetchData();
-	},[])
-
-
+	}, []);
 
 	async function addTaskHandler(value) {
 		const newTaskId = self.crypto?.randomUUID() ?? Date.now();
 
 		try {
 			const response = await fetch("http://localhost:3001/todos", {
-				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
+				method: "POST",
 				body: JSON.stringify({
 					id: newTaskId,
 					title: value,
@@ -48,48 +50,88 @@ export default function useTasks() {
 				}),
 			});
 
-			if (!response.ok) throw new Error('Error add task');
+			if (!response.ok) throw new Error("Error add task");
 
-			const newTask = await response.json()
-			console.log(newTask);
-			setTodos((prev) => [...prev, newTask]);
+			const taskNew = await response.json();
+			console.log(taskNew);
+			setTodos((prev) => [...prev, taskNew]);
+		} catch (error) {
+			setErrorData(error.message);
+		}
+	}
+
+	async function checkedTaskHandler(task) {
+		try {
+			const response = await fetch(
+				`http://localhost:3001/todos/${task.id}`,
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+					method: "PATCH",
+					body: JSON.stringify({
+						isComplate: !task.isComplate,
+					}),
+				},
+			);
+
+			if (!response.ok) throw new Error("Error update task");
+
+			const taskUpdated = await response.json();
+			console.log(taskUpdated);
+
+			setTodos((prev) =>
+				prev.map((t) => (t.id === taskUpdated.id ? taskUpdated : t)),
+			);
+		} catch (error) {
+			setErrorData(error.message);
+		}
+	}
+
+	async function removeTaskHandler(task) {
+		try {
+			const response = await fetch(
+				`http://localhost:3001/todos/${task.id}`,
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+					method: "DELETE",
+				},
+			);
+
+			if (!response.ok) throw new Error("Error delete task");
+
+			setTodos((prev) => prev.filter((t) => t.id !== task.id));
+		} catch (error) {
+			setErrorData(error.message);
+		}
+	}
+
+	async function removeAllTasksHandler() {
+		try {
+			await Promise.all(
+				todos.map((task)=> 
+					fetch(`http://localhost:3001/todos/${task.id}`, {
+						headers: {
+							"Content-Type": "application/json",
+						},
+						method: "DELETE",
+					})
+				)
+			)
+
+			setTodos([]);
 
 		} catch (error) {
 			setErrorData(error.message);
 		}
 	}
 
-	const checkedTaskHandler = useCallback(
-		(id) => {
-			setTodos(
-				todos.map((t) => {
-					if (t.id === id) {
-						return { ...t, isComplate: !t.isComplate };
-					}
-					return t;
-				}),
-			);
-		},
-		[todos],
-	);
 
-	const removeTaskHandler = useCallback(
-		(id) => {
-			console.log("removeTaskHandler", id);
-			setTodos(todos.filter((t) => t.id !== id));
-		},
-		[todos],
-	);
-
-	const removeAllTasksHandler = useCallback(() => {
-		console.log("removeAllTasksHandler");
-		setTodos([]);
+	useEffect(() => {
+		addRef.current.focus();
 	}, []);
-
-
-	useEffect(()=> {
-		addRef.current.focus()
-	},[])
 
 	const todosFiltered = useMemo(
 		() =>
