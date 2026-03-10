@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { todos as todosInitial } from "../constants/constants.js";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { request } from "../api/request";
 
-export default function useTasks() {
+export function useTasks() {
 	const [todos, setTodos] = useState([]);
 	const [searchValue, setSearchValue] = useState("");
 
@@ -13,16 +13,9 @@ export default function useTasks() {
 	useEffect(() => {
 		async function fetchData() {
 			try {
-				const response = await fetch("http://localhost:3001/todos", {
-					headers: {
-						"Content-Type": "application/json",
-					},
-					method: "GET",
+				const data = await request("/todos", {
+					metod: "GET",
 				});
-
-				if (!response.ok) throw new Error("Error data server");
-				const data = await response.json();
-
 				setTodos(data);
 			} catch (error) {
 				setErrorData(error);
@@ -38,10 +31,7 @@ export default function useTasks() {
 		const newTaskId = self.crypto?.randomUUID() ?? Date.now();
 
 		try {
-			const response = await fetch("http://localhost:3001/todos", {
-				headers: {
-					"Content-Type": "application/json",
-				},
+			const taskNew = await request("/todos", {
 				method: "POST",
 				body: JSON.stringify({
 					id: newTaskId,
@@ -50,10 +40,6 @@ export default function useTasks() {
 				}),
 			});
 
-			if (!response.ok) throw new Error("Error add task");
-
-			const taskNew = await response.json();
-			console.log(taskNew);
 			setTodos((prev) => [...prev, taskNew]);
 		} catch (error) {
 			setErrorData(error.message);
@@ -62,23 +48,12 @@ export default function useTasks() {
 
 	async function checkedTaskHandler(task) {
 		try {
-			const response = await fetch(
-				`http://localhost:3001/todos/${task.id}`,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-					method: "PATCH",
-					body: JSON.stringify({
-						isComplate: !task.isComplate,
-					}),
-				},
-			);
-
-			if (!response.ok) throw new Error("Error update task");
-
-			const taskUpdated = await response.json();
-			console.log(taskUpdated);
+			const taskUpdated = await request(`/todos/${task.id}`, {
+				method: "PATCH",
+				body: JSON.stringify({
+					isComplate: !task.isComplate,
+				}),
+			});
 
 			setTodos((prev) =>
 				prev.map((t) => (t.id === taskUpdated.id ? taskUpdated : t)),
@@ -90,19 +65,11 @@ export default function useTasks() {
 
 	async function removeTaskHandler(task) {
 		try {
-			const response = await fetch(
-				`http://localhost:3001/todos/${task.id}`,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-					method: "DELETE",
-				},
-			);
+			const taskRemoved = await request(`/todos/${task.id}`, {
+				method: "DELETE",
+			});
 
-			if (!response.ok) throw new Error("Error delete task");
-
-			setTodos((prev) => prev.filter((t) => t.id !== task.id));
+			setTodos((prev) => prev.filter((t) => t.id !== taskRemoved.id));
 		} catch (error) {
 			setErrorData(error.message);
 		}
@@ -111,23 +78,18 @@ export default function useTasks() {
 	async function removeAllTasksHandler() {
 		try {
 			await Promise.all(
-				todos.map((task)=> 
-					fetch(`http://localhost:3001/todos/${task.id}`, {
-						headers: {
-							"Content-Type": "application/json",
-						},
+				todos.map((task) =>
+					request(`/todos/${task.id}`, {
 						method: "DELETE",
-					})
-				)
-			)
+					}),
+				),
+			);
 
 			setTodos([]);
-
 		} catch (error) {
 			setErrorData(error.message);
 		}
 	}
-
 
 	useEffect(() => {
 		addRef.current.focus();
