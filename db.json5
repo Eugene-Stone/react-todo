@@ -1,1 +1,1 @@
-{todos:[{id:'9d873792-e890-4812-8970-f8eaf75591d9',title:'1',isComplate:false},{id:'ebec33eb-e9a8-4b8b-8b86-e39b6cb047cf',title:'2',isComplate:true},{id:'6dddebdf-a57d-4a71-aa87-0aaa9d2852a4',title:'3',isComplate:false},{id:'cb0f1f2a-3029-4584-9139-6df1753b1c3c',title:'4',isComplate:false},{id:'c57e1300-fc73-41bc-981a-ebe11094eff4',title:'5',isComplate:true}],$schema:'./node_modules/json-server/schema.json'}
+{todos:[],$schema:'./node_modules/json-server/schema.json'}

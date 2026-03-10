@@ -7,6 +7,8 @@ export function useTasks() {
 
 	const [loading, setLoading] = useState(true);
 	const [errorData, setErrorData] = useState(null);
+	const [isAppearing, setIsAppearing] = useState(null);
+
 
 	const addRef = useRef(null);
 
@@ -40,7 +42,13 @@ export function useTasks() {
 				}),
 			});
 
+			setIsAppearing(taskNew.id);
+
 			setTodos((prev) => [...prev, taskNew]);
+
+			setTimeout(() => {
+				setIsAppearing(null);
+			}, 400);
 		} catch (error) {
 			setErrorData(error.message);
 		}
@@ -115,5 +123,6 @@ export function useTasks() {
 		removeTaskHandler,
 		removeAllTasksHandler,
 		addRef,
+		isAppearing,
 	};
 }

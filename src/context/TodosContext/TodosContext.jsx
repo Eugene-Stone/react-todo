@@ -14,6 +14,7 @@ export default function TodosContextProvider({ children }) {
 		removeTaskHandler,
 		removeAllTasksHandler,
 		addRef,
+		isAppearing,
 	} = useTasks();
 
 	return (
@@ -28,6 +29,7 @@ export default function TodosContextProvider({ children }) {
 				removeTaskHandler,
 				removeAllTasksHandler,
 				addRef,
+				isAppearing,
 			}}>
 			{children}
 		</TodosContext.Provider>

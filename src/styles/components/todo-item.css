@@ -1,3 +1,12 @@
+@keyframes appearing {
+	0% {
+		max-height: 0;
+	}
+	100% {
+		max-height: 100px;
+	}
+}
+
 .todo-item {
   display: flex;
   align-items: center;
@@ -5,9 +14,20 @@
   padding-left: 10px;
   border: var(--border);
   border-radius: var(--border-radius);
+  position: relative;
 
   &:hover {
     background-color: var(--color-gray-1);
+  }
+
+
+	
+  &.is-appearing {
+	overflow: hidden;
+	animation-name: appearing;
+	animation-play-state: running;
+	animation-fill-mode: forwards;
+ 	animation-duration: calc(var(--transition-duration) * 2);
   }
 
   &.is-disappearing {
@@ -66,6 +86,24 @@
 .todo-item__label {
   width: 100%;
   user-select: none;
+}
+
+.todo-item__link {
+	display: flex;
+	align-items: center;
+	position: absolute;
+	z-index: 2;
+	right: 50px;
+	top: 0;
+	bottom: 0;
+	&:not(:hover) {
+		color: inherit;
+	}
+	svg {
+		display: block;
+		width: 18px;
+		height: auto;
+	}
 }
 
 .todo-item__delete-button {
