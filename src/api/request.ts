@@ -1,10 +1,9 @@
+const BASE_URL = 'http://localhost:3001';
 
-const BASE_URL = "http://localhost:3001";
-
-export async function request(endpoint, options = {}) {
+export async function request(endpoint: string, options = {}) {
 	const response = await fetch(`${BASE_URL}${endpoint}`, {
 		headers: {
-			"Content-Type": "application/json",
+			'Content-Type': 'application/json',
 		},
 		...options,
 	});
