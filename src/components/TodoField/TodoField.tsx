@@ -1,13 +1,23 @@
-import { memo } from 'react';
+import { memo, forwardRef } from 'react';
 
-function TodoField(props) {
+interface TodoFieldProps {
+	id: string;
+	title?: string;
+	type?: string;
+	value: string;
+	setValue: (value: string) => void;
+	errorValue: string;
+	setErrorValue: (value: string) => void;
+	addTaskHandler?: (value: string) => Promise<void>;
+}
+
+const TodoField = forwardRef<HTMLInputElement, TodoFieldProps>(function TodoField(props, ref) {
 	const {
 		id,
 		title = 'Field title',
 		type = 'text',
 		value,
 		setValue,
-		ref,
 		errorValue,
 		setErrorValue,
 	} = props;
@@ -43,6 +53,6 @@ function TodoField(props) {
 			{errorValue !== '' && <span className="error">{errorValue}</span>}
 		</div>
 	);
-}
+});
 
 export default memo(TodoField);

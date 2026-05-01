@@ -1,13 +1,17 @@
-import Button from '../Button/Button';
-import TodoField from '../TodoField/TodoField';
+import Button from '../Button/Button.tsx';
+import TodoField from '../TodoField/TodoField.tsx';
 
 import { useContext, useState } from 'react';
-import { TodosContext } from '../../context/TodosContext/TodosContext';
+import { TodosContext } from '../../context/TodosContext/TodosContext.tsx';
+import { useTodosContext } from '../../context/TodosContext/useTodosContext';
 
 export default function TodoAddForm() {
-	const [value, setValue] = useState('');
-	const [errorValue, setErrorValue] = useState('');
-	const { addTaskHandler, addRef } = useContext(TodosContext);
+	const [value, setValue] = useState<string>('');
+	const [errorValue, setErrorValue] = useState<string>('');
+	// const context = useContext(TodosContext);
+	// if (!context) throw new Error('TodosContext must be used within TodosContextProvider');
+	// const { addTaskHandler, addRef } = context;
+	const { addTaskHandler, addRef } = useTodosContext();
 
 	// console.log(value);
 

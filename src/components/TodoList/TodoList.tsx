@@ -1,10 +1,12 @@
 import { useContext, useMemo } from 'react';
-import { TodosContext } from '../../context/TodosContext/TodosContext';
-import TodoItem from '../TodoItem/TodoItem';
-import TodoInfo from '../TodoInfo/TodoInfo';
+import { TodosContext } from '../../context/TodosContext/TodosContext.tsx';
+import TodoItem from '../TodoItem/TodoItem.tsx';
+import TodoInfo from '../TodoInfo/TodoInfo.tsx';
 
 export default function TodoList() {
-	const { todos, todosFiltered } = useContext(TodosContext);
+	const context = useContext(TodosContext);
+	if (!context) throw new Error('TodosContext must be used within TodosContextProvider');
+	const { todos, todosFiltered } = context;
 
 	// const todosList = todosFiltered.map((todoItem) => {
 	// 	return (

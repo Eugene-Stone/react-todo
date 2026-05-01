@@ -1,9 +1,11 @@
 import { useContext, useState } from 'react';
-import TodoField from '../TodoField/TodoField';
-import { TodosContext } from '../../context/TodosContext/TodosContext';
+import TodoField from '../TodoField/TodoField.tsx';
+import { TodosContext } from '../../context/TodosContext/TodosContext.tsx';
 
 export default function TodoSearchForm() {
-	const { searchValue, setSearchValue } = useContext(TodosContext);
+	const context = useContext(TodosContext);
+	if (!context) throw new Error('TodosContext must be used within TodosContextProvider');
+	const { searchValue, setSearchValue } = context;
 
 	console.log(searchValue);
 
@@ -19,6 +21,8 @@ export default function TodoSearchForm() {
 				type="search"
 				value={searchValue}
 				setValue={setSearchValue}
+				errorValue=""
+				setErrorValue={() => {}}
 			/>
 		</form>
 	);

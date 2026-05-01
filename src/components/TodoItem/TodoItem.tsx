@@ -1,13 +1,28 @@
 import { useContext, memo, useState, useRef } from 'react';
-import { TodosContext } from '../../context/TodosContext/TodosContext';
+import { TodosContext } from '../../context/TodosContext/TodosContext.tsx';
 
-function TodoItem({ task, id, title, isComplate }) {
-	const { checkedTaskHandler, removeTaskHandler, isAppearing } = useContext(TodosContext);
+interface Todo {
+	id: string;
+	title: string;
+	isComplate: boolean;
+}
 
-	const todoItemRef = useRef(null);
+interface TodoItemProps {
+	task: Todo;
+	id: string;
+	title: string;
+	isComplate: boolean;
+}
+
+function TodoItem({ task, id, title, isComplate }: TodoItemProps) {
+	const context = useContext(TodosContext);
+	if (!context) throw new Error('TodosContext must be used within TodosContextProvider');
+	const { checkedTaskHandler, removeTaskHandler, isAppearing } = context;
+
+	const todoItemRef = useRef<HTMLLIElement>(null);
 
 	const onDelete = () => {
-		todoItemRef.current.classList.add('is-disappearing');
+		todoItemRef.current !== null && todoItemRef.current.classList.add('is-disappearing');
 
 		setTimeout(() => {
 			removeTaskHandler(task);
