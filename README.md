@@ -1,16 +1,42 @@
-# React + Vite
+# react-todo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Простой ToDo-приложение на React + Vite + TypeScript с локальным REST API через `json-server`.
 
-Currently, two official plugins are available:
+## Что здесь реализовано
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Добавление новой задачи
+- Поиск задач по тексту
+- Отметка задачи как выполненной
+- Удаление отдельной задачи
+- Удаление всех задач
+- Хранение данных в локальном JSON-сервере (`db.json5`)
+- Использование React Context и собственного хука `useTasks`
 
-## React Compiler
+## Стек
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- TypeScript 6
+- Vite
+- Sass
+- json-server
+- ESLint
 
-## Expanding the ESLint configuration
+## Структура проекта
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `src/` — исходный код приложения
+  - `components/` — UI-компоненты
+  - `context/` — React Context для работы с задачами
+  - `hooks/` — собственный хук `useTasks`
+  - `api/` — утилита для запросов к API
+  - `styles/` — стили приложения
+- `db.json5` — начальные данные для `json-server`
+- `package.json` — зависимости и скрипты проекта
+
+## Как работает приложение
+
+- Данные загружаются из `json-server` при старте
+- Задачи фильтруются по строке поиска
+- Новые задачи добавляются в локальный API
+- Статус выполнения обновляется через PATCH-запрос
+- Удаление задач выполняется через DELETE-запросы
+
